@@ -47,3 +47,8 @@ Why did I do this? Motivation is the key to success.
 
 ## How to get it to work:
 
+It's very easy, though my machine is running Arch Linux with the Gnome DE and I'm not sure If It'll work on everyone's Linux machine. But I'm quite sure that It'll run on most distro's with the Gnome DE.
+
+1) Make sure that all the files from this project are in the same folder
+2) Run the "setSlideshowSchedule.sh" script and pass in a number parameter ranging from 1 to 60 for the transition time in minutes.
+3) Enjoy!
