@@ -54,3 +54,9 @@ It's very easy, though my machine is running Arch Linux with the Gnome DE and I'
 2) Run the "setSlideshowSchedule.sh" script and pass in a number parameter ranging from 1 to 60 for the transition time in minutes.
 
 3) Enjoy!
+
+## Requirements:
+
++ `systemctl` package
++ `cronie` package
++ Gnome DE
