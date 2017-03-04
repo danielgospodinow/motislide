@@ -18,4 +18,6 @@ echo "*/${minutes} * * * * ${PWD}/changeWallpaper.sh ${PWD}/images" >> currentCr
 crontab currentCron
 rm currentCron
 
+systemctl start cronie.service
+
 echo "Scheduler set successfully, enjoy!"
