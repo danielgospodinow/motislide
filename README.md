@@ -12,7 +12,7 @@ The project is written in a couple of hours.
 
 Why did I do this? Motivation is the key to success.
 
-######Here are some of my favourites:
+###### Here are some of my favourites:
 <p align="center">
   <img src = "http://i.imgur.com/f4fx6xN.jpg"/>
 </p>
