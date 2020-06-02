@@ -2,24 +2,24 @@ package main
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/reujab/wallpaper"
 )
 
 func main() {
-	updateInterval, _ := strconv.Atoi(os.Args[1])
-	imageDirectory := os.Args[2]
-	//TODO: Use flags instead of comm args, and try to use default values for the two arguments
+	updateIntervalPtr := flag.Int("int", 60, "Background update interval in minutes.")
+	imageDirectoryPtr := flag.String("imgdir", "./images", "Location of folder with background wallpapers.")
+	flag.Parse()
 
 	fmt.Println("Starting the background changer process ...")
-	scheduleBackgroundUpdate(updateInterval, imageDirectory)
+	scheduleBackgroundUpdate(*updateIntervalPtr, *imageDirectoryPtr)
 }
 
 // scheduleBackgroundUpdate schedules a job triggering background image update.
