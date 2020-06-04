@@ -2,61 +2,29 @@
 
 ## Basic info:
 
-A simple background slideshow with motivational wallpapers for Linux, written in bash.
+A simple cross-platform background slideshow application with motivational wallpapers written in Go.
 
-I started this project today, because I was really mad at some of the most popular background slideshow applications. I decided to make myself one, which is simpler and better than the others.
+I got the wallpapers from https://quotefancy.com/.
 
-I use wallpapers from the website: https://quotefancy.com/
+Why did I do this? Motivation is the key to success. Having some motivational quote wallpapers will boost productivity.
 
-The project is written in a couple of hours.
+## How to get this to work:
 
-Why did I do this? Motivation is the key to success.
+Just find the executable for your operating system in the `/bin` folder and run `./motislide --int=1 --imgdir="../../images"`, in case you want to use the motivational wallpapers. 
+
+If you have your own set of wallpaper that you want to use, just change the `--imgdir` argument to point to your personal directory.
+
+Also, check the `--help` command to see some information about the CLI.
 
 ###### Here are some of my favourites:
 <p align="center">
-  <img src = "http://i.imgur.com/f4fx6xN.jpg"/>
+  <img src = "https://i.imgur.com/pce3Dhp.png"/>
 </p>
 
 <p align="center">
-  <img src = "http://i.imgur.com/1eH1s78.jpg"/>
+  <img src = "https://i.imgur.com/beG6sj3.jpg"/>
 </p>
 
 <p align="center">
-  <img src = "http://i.imgur.com/pzO04Ax.jpg"/>
+  <img src = "https://i.imgur.com/CsyQsfl.jpg"/>
 </p>
-
-<p align="center">
-  <img src = "http://i.imgur.com/CTD7mSC.jpg"/>
-</p>
-
-<p align="center">
-  <img src = "http://i.imgur.com/4C5Tjcr.png"/>
-</p>
-
-<p align="center">
-  <img src = "http://i.imgur.com/SBW1YjB.jpg"/>
-</p>
-
-<p align="center">
-  <img src = "http://i.imgur.com/ohGl4QH.jpg"/>
-</p>
-
-<p align="center">
-  <img src = "http://i.imgur.com/iT3zk6X.jpg"/>
-</p>
-
-## How to get it to work:
-
-It's very easy, though my machine is running Arch Linux with the Gnome DE and I'm not sure If It'll work on everyone's Linux machine. But I'm quite sure that It'll run on most distro's with the Gnome DE.
-
-1) Make sure that all the files from this project are in the same folder
-
-2) Run the "setSlideshowSchedule.sh" script and pass in a number parameter ranging from 1 to 60 for the transition time in minutes.
-
-3) Enjoy!
-
-## Requirements:
-
-+ `systemctl` package
-+ `cronie` package
-+ Gnome DE
