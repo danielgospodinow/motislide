@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/reujab/wallpaper"
@@ -43,7 +44,7 @@ func changeBackground(imageDirectory string) {
 	}
 
 	for {
-		newImagePath, err := getRandomImageFilepath(imageDirectory)
+		newImageRelPath, err := getRandomImageFilepath(imageDirectory)
 		if err != nil {
 			fmt.Println("Failed to fetch a new image")
 			fmt.Println(err.Error())
@@ -51,7 +52,7 @@ func changeBackground(imageDirectory string) {
 			return
 		}
 
-		if newImagePath == background {
+		if newImageRelPath == background {
 			imageFiles, _ := ioutil.ReadDir(imageDirectory)
 			if len(imageFiles) <= 1 {
 				fmt.Println("The set of provided images is too small, please add some more")
@@ -62,7 +63,8 @@ func changeBackground(imageDirectory string) {
 			continue
 		}
 
-		wallpaper.SetFromFile(newImagePath)
+		newImageAbsPath, _ := filepath.Abs(newImageRelPath)
+		wallpaper.SetFromFile(newImageAbsPath)
 		break
 	}
 
