@@ -3,67 +3,112 @@ package main
 import (
 	"danielgospodinow/motislide/utils"
 	"flag"
-	"fmt"
 	"io/ioutil"
-	"path/filepath"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/reujab/wallpaper"
 )
 
 func main() {
-	updateIntervalPtr := flag.Int("int", 60, "Background update interval in minutes.")
+	updateIntervalPtr := flag.Int("interval", 60, "Background update interval in minutes.")
 	imageDirectoryPtr := flag.String("imgdir", "./images", "Location of folder with background wallpapers.")
 	flag.Parse()
 
-	fmt.Println("Starting the background changer process ...")
-	scheduleBackgroundUpdate(*updateIntervalPtr, *imageDirectoryPtr)
+	log.Println("Starting the background changer process...")
+	start(*updateIntervalPtr, *imageDirectoryPtr)
+	log.Println("Application finished successfully.")
 }
 
-// scheduleBackgroundUpdate schedules a job triggering background image update.
-func scheduleBackgroundUpdate(updateInterval int, imageDirectory string) {
+// start schedules a job triggering background image update.
+func start(updateInterval int, imageDirectory string) {
+	execute := make(chan struct{}, 1)
+	execute <- struct{}{}
+	ticker := time.NewTicker(time.Duration(updateInterval) * time.Minute)
+	exit := make(chan os.Signal, 1)
+	signal.Notify(exit, os.Interrupt, syscall.SIGTERM)
+
+	originalBackground, err := getBackground()
+	if err != nil {
+		log.Fatalln("Failed to get original background.", err)
+	}
+
+	imageFiles, _ := ioutil.ReadDir(imageDirectory)
+	if len(imageFiles) <= 1 {
+		log.Fatalln("The set of provided images is too small, please add some more.")
+	}
+
 	for {
-		fmt.Println("Changing background wallpaper ...")
-		changeBackground(imageDirectory)
-		time.Sleep(time.Duration(updateInterval) * time.Minute)
+		select {
+		case <-execute:
+			log.Println("Changing background wallpaper...")
+			changeBackgroundFromDirectory(imageDirectory)
+		case <-ticker.C:
+			execute <- struct{}{}
+		case <-exit:
+			log.Println("Stopping the background change job...")
+
+			log.Println("Restoring original background image...")
+			err := setBackground(originalBackground)
+			if err != nil {
+				log.Println("Failed to restore original background image.", err)
+			}
+
+			return
+		}
 	}
 }
 
-// changeBackground fetches a new wallpaper image which is different from the current
-// background image and sets it as the new background image.
-func changeBackground(imageDirectory string) {
-	background, err := wallpaper.Get()
+// changeBackgroundFromDirectory fetches a new random wallpaper image which is different from the current background image and sets it as the new background image.
+func changeBackgroundFromDirectory(imageDirectory string) {
+	background, err := getBackground()
 	if err != nil {
-		fmt.Println("Failed to fetch current wallpaper")
-		fmt.Println(err.Error())
-
 		return
 	}
 
 	for {
-		newImageRelPath, err := utils.GetRandomImageFilepath(imageDirectory)
+		newImagePath, err := utils.GetRandomImageAbsPath(imageDirectory)
 		if err != nil {
-			fmt.Println("Failed to fetch a new image")
-			fmt.Println(err.Error())
-
+			log.Println("Failed to fetch a new image.", err)
 			return
 		}
 
-		if newImageRelPath == background {
-			imageFiles, _ := ioutil.ReadDir(imageDirectory)
-			if len(imageFiles) <= 1 {
-				fmt.Println("The set of provided images is too small, please add some more")
-
-				return
-			}
-
+		if newImagePath == background {
 			continue
 		}
 
-		newImageAbsPath, _ := filepath.Abs(newImageRelPath)
-		wallpaper.SetFromFile(newImageAbsPath)
+		err = setBackground(newImagePath)
+		if err != nil {
+			log.Printf("Failed to set background to '%s'. %s", newImagePath, err)
+			return
+		}
+
+		log.Println("Wallpaper changed successfully.")
 		break
 	}
+}
 
-	fmt.Println("Wallpaper changed successfully")
+// setBackground changes the current background with a new one.
+func setBackground(file string) error {
+	err := wallpaper.SetFromFile(file)
+	if err != nil {
+		log.Printf("Failed to set wallpaper '%s'.", file)
+		return err
+	}
+
+	return nil
+}
+
+// getBackground retrieves the current background image's file path.
+func getBackground() (string, error) {
+	background, err := wallpaper.Get()
+	if err != nil {
+		log.Println("Failed to get current wallpaper.", err)
+		return "", err
+	}
+
+	return background, nil
 }

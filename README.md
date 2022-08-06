@@ -10,7 +10,7 @@ Why did I do this? Motivation is the key to success. Having some motivational qu
 
 ## How to get this to work:
 
-Just find the executable for your operating system in the `/bin` folder and run `./motislide --int=1 --imgdir="../../images"`, in case you want to use the motivational wallpapers. 
+Just find the executable for your operating system in the `/bin` folder and run `./motislide --interval=1 --imgdir="../../images"`, in case you want to use the motivational wallpapers. 
 
 If you have your own set of wallpaper that you want to use, just change the `--imgdir` argument to point to your personal directory.
 
